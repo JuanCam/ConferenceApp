@@ -4,17 +4,17 @@ GENERAL USAGE NOTES
 -------------------
 
 -First of all, for using this webiste follow this steps:<br>
-*Download or clone the source code.
-*Go to console.developers.google.com
-*Create a new project.
-*Run App Engine.
-*Deploy the project.
-*Introduce the url <your-project-id>.appspot.com
--The Conference Central is an application that allows registered gmail accounts to create, view and register to conferences.
--Create sessions for the conferences
--Add sessions to whislist
--You can filter the sessions by time and duration.
--You can also filter the sessions by duration, searching by all the sessions with inferior or greater than the desired duration or also equal duration.
+*Download or clone the source code.<br>
+*Go to console.developers.google.com<br>
+*Create a new project.<br>
+*Run App Engine.<br>
+*Deploy the project.<br>
+*Introduce the url <your-project-id>.appspot.com<br>
+-The Conference Central is an application that allows registered gmail accounts to create, view and register to conferences.<br>
+-Create sessions for the conferences.<br>
+-Add sessions to whislist.<br>
+-You can filter the sessions by time and duration.<br>
+-You can also filter the sessions by duration, searching by all the sessions with inferior or greater than the desired duration or also equal duration.<br>
 
 PULLING REQUEST
 ------------------
