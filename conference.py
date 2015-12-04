@@ -602,7 +602,6 @@ class ConferenceApi(remote.Service):
         if not qs.get():
             memcache.delete(MEMCACHE_SESSIONS_SPEAKER_KEY)
         else:
-            # If the Conference has at least 1 Session.
             # Finds the sessions were the speaker is related to
             qs = qs.filter(Session.speaker == speaker_ses)
             speaker_string = 'The following speaker: ' + \
