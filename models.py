@@ -134,7 +134,7 @@ class Session(ndb.Model):
     duration = ndb.IntegerProperty()
     sessionType = ndb.StringProperty()
     date = ndb.DateProperty()
-    startTime = ndb.StringProperty()
+    startTime = ndb.FloatProperty()
 
 
 class SessionForm(messages.Message):
