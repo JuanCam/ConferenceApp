@@ -26,6 +26,7 @@ duration: The duration of the session(Integer)<br>
 sessionType: The session type (workshop, lecture, etc) (String)<br>
 date: The date the session will happen. (DateProperty)<br>
 startTime: The time where the session start (Float)<br>
+
 The name session is a string field because this field could contain many kind of characters, also the highlights and the session type. The speaker name was assigned
 a string because when you want to filter the sessions by speaker is more comfortable for the user to do it with the name rather than a key.
 the most remarkable type I want to explain is the startTime y choose it float because I can convert with a simple algorithm in the backend code the string with this
