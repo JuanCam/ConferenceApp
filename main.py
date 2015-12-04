@@ -31,7 +31,7 @@ class SetSessionSpeakerHandler(webapp2.RequestHandler):
 
     def post(self):
         print self.request.get('websafeKey')
-        ConferenceApi._cacheSpeaker(self.request.get('websafeKey'),self.request.get('speaker'))
+        ConferenceApi._cacheSpeaker(self.request.get('websafeKey'), self.request.get('speaker'))
         self.response.set_status(204)
 
 
