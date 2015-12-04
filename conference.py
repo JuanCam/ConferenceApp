@@ -630,11 +630,12 @@ class ConferenceApi(remote.Service):
                 if field.name.endswith('date'):
                     setattr(sf, field.name, str(getattr(sess, field.name)))
                 elif field.name.endswith('startTime') and getattr(sess, field.name):
-                    #Transform the float type of the startTime field into a string
+                    # Transform the float type of the startTime field into a
+                    # string
                     if not type(getattr(sess, field.name)) is str:
                         time = str(getattr(sess, field.name)).split('.')
-                        startTime = str(int((float(time[1])/100) * 60))[:2]
-                        setattr(sf, field.name, str(time[0]+':'+startTime))
+                        startTime = str(int((float(time[1]) / 100) * 60))[:2]
+                        setattr(sf, field.name, str(time[0] + ':' + startTime))
                     else:
                         setattr(sf, field.name, str(getattr(sess, field.name)))
                 else:
@@ -683,14 +684,15 @@ class ConferenceApi(remote.Service):
             raise endpoints.BadRequestException('date field is empty')
         else:
             data['date'] = datetime.strptime(data['date'], "%Y-%m-%d")
-        #Convert the startTime string into a float number equivalent to the time
+        # Convert the startTime string into a float number equivalent to the
+        # time
         if not data['startTime']:
             raise endpoints.BadRequestException('time field is empty')
         else:
             time = data['startTime'].split(':')
             data['startTime'] = float(time[0]) + (float(time[1])) / 60.0
 
-        session=Session(
+        session = Session(
             name=data['name'],
             highlights=data['highlights'],
             speaker=data['speaker'],
@@ -723,14 +725,14 @@ class ConferenceApi(remote.Service):
                       name='getConferenceSessions')
     def getConferenceSessions(self, request):
         """Get a Conference Session"""
-        user=endpoints.get_current_user()
+        user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
 
-        p_key=request.websafeConferenceKey
-        parent_key=ndb.Key(urlsafe=p_key)
+        p_key = request.websafeConferenceKey
+        parent_key = ndb.Key(urlsafe=p_key)
 
-        qs=Session.query(ancestor=parent_key)
+        qs = Session.query(ancestor=parent_key)
         qs.fetch()
 
         return SessionForms(
@@ -743,16 +745,16 @@ class ConferenceApi(remote.Service):
                       name='getConferenceSessionsByType')
     def getConferenceSessionsByType(self, request):
         """Get a Conference Session by Type"""
-        user=endpoints.get_current_user()
+        user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
 
-        p_key=request.websafeConferenceKey
-        parent_key=ndb.Key(urlsafe=p_key)
+        p_key = request.websafeConferenceKey
+        parent_key = ndb.Key(urlsafe=p_key)
 
-        qs=Session.query(ancestor=parent_key)
-        data={f.name: getattr(request, f.name) for f in request.all_fields()}
-        qs=qs.filter(Session.sessionType == data['sessionType'])
+        qs = Session.query(ancestor=parent_key)
+        data = {f.name: getattr(request, f.name) for f in request.all_fields()}
+        qs = qs.filter(Session.sessionType == data['sessionType'])
 
         return SessionForms(
             items=[self._copySessionToForm(sess) for sess in qs]
@@ -764,20 +766,20 @@ class ConferenceApi(remote.Service):
                       name='getSessionsByStartTimeAndDuration')
     def getSessionsByStartTimeAndDuration(self, request):
         """Get a Conference Session by time and duration"""
-        user=endpoints.get_current_user()
+        user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
 
-        qs=Session.query()
+        qs = Session.query()
 
-        data={f.name: getattr(request, f.name) for f in request.all_fields()}
+        data = {f.name: getattr(request, f.name) for f in request.all_fields()}
         # Filters the query by all sessions with the startTime and duration equal
         # to the values of the requested fields.
         time = data['startTime'].split(':')
-        #Transform the string to the float value
+        # Transform the string to the float value
         startTime = float(time[0]) + (float(time[1])) / 60.0
-        qs=qs.filter(Session.startTime == startTime)
-        qs=qs.filter(Session.duration == data['duration'])
+        qs = qs.filter(Session.startTime == startTime)
+        qs = qs.filter(Session.duration == data['duration'])
 
         return SessionForms(
             items=[self._copySessionToForm(sess) for sess in qs]
@@ -790,25 +792,25 @@ class ConferenceApi(remote.Service):
     def filterConferenceSessionsByDuration(self, request):
         """Filters the conference sessions by its duration. the filter depends on the
         discriminator which is the operator field"""
-        user=endpoints.get_current_user()
+        user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
 
-        p_key=request.websafeConferenceKey
-        parent_key=ndb.Key(urlsafe=p_key)
+        p_key = request.websafeConferenceKey
+        parent_key = ndb.Key(urlsafe=p_key)
 
-        qs=Session.query(ancestor=parent_key)
+        qs = Session.query(ancestor=parent_key)
 
-        data={f.name: getattr(request, f.name) for f in request.all_fields()}
+        data = {f.name: getattr(request, f.name) for f in request.all_fields()}
         # Depending on the operator a specific filter will be applied to the query.
         # If something diferent to less, great, or equal is set to the operator field
         # throw a bad request exception.
         if(data['operator'] == 'less'):
-            qs=qs.filter(Session.duration < data['duration'])
+            qs = qs.filter(Session.duration < data['duration'])
         elif(data['operator'] == 'great'):
-            qs=qs.filter(Session.duration > data['duration'])
+            qs = qs.filter(Session.duration > data['duration'])
         elif(data['operator'] == 'equal'):
-            qs=qs.filter(Session.duration == data['duration'])
+            qs = qs.filter(Session.duration == data['duration'])
         else:
             raise endpoints.BadRequestException('Incorrect request')
 
@@ -822,14 +824,14 @@ class ConferenceApi(remote.Service):
                       name='getSessionsBySpeaker')
     def getSessionsBySpeaker(self, request):
         """Get a Conference Session by speaker. the query is filtered by the speaker field"""
-        user=endpoints.get_current_user()
+        user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
 
-        qs=Session.query()
-        data={f.name: getattr(request, f.name) for f in request.all_fields()}
+        qs = Session.query()
+        data = {f.name: getattr(request, f.name) for f in request.all_fields()}
         # Filter the query by the speaker
-        qs=qs.filter(Session.speaker == data['speaker'])
+        qs = qs.filter(Session.speaker == data['speaker'])
 
         return SessionForms(
             items=[self._copySessionToForm(sess) for sess in qs]
@@ -842,23 +844,23 @@ class ConferenceApi(remote.Service):
     def addSessionToWishlist(self, request):
         """Add a Session to a wish list. the session is taken by its websafeKey
         and inserted in the WishList entity"""
-        user=endpoints.get_current_user()
+        user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
-        user_id=getUserId(user)
+        user_id = getUserId(user)
 
-        safe_key=request.websafeSessionKey
+        safe_key = request.websafeSessionKey
         # Get the session entity
-        session=ndb.Key(urlsafe=safe_key).get()
+        session = ndb.Key(urlsafe=safe_key).get()
         # define the required fields from the session in the wishlist.
-        data={'name': '', 'speaker': ''}
+        data = {'name': '', 'speaker': ''}
 
-        data['name']=session.name
-        data['speaker']=session.speaker
+        data['name'] = session.name
+        data['speaker'] = session.speaker
 
-        p_key=ndb.Key(Profile, user_id)
+        p_key = ndb.Key(Profile, user_id)
         # Create the WishList entity
-        wish=WishList(
+        wish = WishList(
             sessionName=data['name'],
             sessionSpeaker=data['speaker'],
             sessionKey=safe_key,
@@ -877,18 +879,18 @@ class ConferenceApi(remote.Service):
                       name='removeSessionFromWishList')
     def removeSessionFromWishList(self, request):
         """Removes the specific Session from the wishlist"""
-        user=endpoints.get_current_user()
+        user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
 
-        user_id=getUserId(user)
-        parent_key=ndb.Key(Profile, user_id)
-        qw=WishList.query(ancestor=parent_key)
+        user_id = getUserId(user)
+        parent_key = ndb.Key(Profile, user_id)
+        qw = WishList.query(ancestor=parent_key)
         # Filter the result finding the session in the wishlist
-        qw=qw.filter(WishList.sessionKey == request.websafeSessionKey)
+        qw = qw.filter(WishList.sessionKey == request.websafeSessionKey)
         for wl in qw:
             # Delete the entity from data store.
-            wl_ent=wl.key.delete()
+            wl_ent = wl.key.delete()
 
         return StringMessage(data='Session removed from wishlist')
 
@@ -898,13 +900,13 @@ class ConferenceApi(remote.Service):
                       name='getSessionsInWishlist')
     def getSessionsInWishlist(self, request):
         """Get the list of sessions in a wishlist"""
-        user=endpoints.get_current_user()
+        user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
 
-        user_id=getUserId(user)
-        parent_key=ndb.Key(Profile, user_id)
-        qs=WishList.query(ancestor=parent_key)
+        user_id = getUserId(user)
+        parent_key = ndb.Key(Profile, user_id)
+        qs = WishList.query(ancestor=parent_key)
         # Get all the sessions in the user wishlist.
         qs.fetch()
 
@@ -918,10 +920,10 @@ class ConferenceApi(remote.Service):
                       name='returnAllConferences')
     def returnAllConferences(self, request):
         """Returns all Conferences"""
-        q=Conference.query()
+        q = Conference.query()
         q.fetch()
         return ConferenceForms(
             items=[self._copyConferenceToForm(conf, "") for conf in q]
         )
 
-api=endpoints.api_server([ConferenceApi])  # register API
+api = endpoints.api_server([ConferenceApi])  # register API
